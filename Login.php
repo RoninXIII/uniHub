@@ -49,7 +49,7 @@ if(!isset($_SESSION['gestoreAccessi'])){
                    </div>
                    <button class="btn btn-lg btn-primary btn-block" type="submit">Accedi</button>
                    <p class="mt-5 mb-3 text-muted">Copyright 2015-2018 @ Università degli Studi di Camerino</p>
-                   <a href="RegisterPage.php"><u> Non sei registrato? </u></a>
+                   <a href="Registration.php"><u> Non sei registrato? </u></a>
                  <!--  <p><a href="recoverPage.php"><u> Ti sei dimenticato la password? </u></a></p> -->
                  </form>
              
