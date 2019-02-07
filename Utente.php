@@ -97,8 +97,27 @@ class Utente {
 	public function setPassword($aPassword) {
 		$this->password = $aPassword;
 	}
-}
 
-$utente = new Utente();
-$utente -> setPassword('hjbgfdgbfdkj');
+    public function setPreferences($aPreferences){
+		$this->preferenze = $aPreferences;
+	}
+
+	public function getPreferences(){
+		return $this ->preferenze;
+	}
+
+	public function setLivello($aLivello){
+		$this ->$livelloAutorizzativo = $aLivello; 
+	}
+
+	public function getLivello(){
+		return $this ->$livelloAutorizzativo; 
+	}
+
+    public function __construct($paramUsername,$paramEmail,$paramPreferences){
+		$this->username = $paramUsername;
+		$this->email = $paramEmail;
+		$this->preferenze = $paramPreferences;
+	}
+}
 ?>

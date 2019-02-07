@@ -37,10 +37,10 @@ require_once('server.php');
                 Password: '.$_POST['password'].'
 
                 Per verificare la mail, la preghiamo di cliccare al seguente link
-                https://localhost/App_ingegneria_del_software/verify.php?email='.$email.'&hash='.$hash.'        
+                https://localhost/uniHub/verify.php?email='.$email.'&hash='.$hash.'        
                 '; // Our message above including the link
                                              
-                $headers = 'From:noreply@https://localhost/App_ingegneria_del_software/index.php' . "\r\n"; // Set from headers
+                $headers = 'From:noreply@https://localhost/uniHub/index.php' . "\r\n"; // Set from headers
 
                 if(mail($to, $subject, $message, $headers)){
                     

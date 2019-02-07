@@ -1,6 +1,6 @@
 <?php
 require_once(realpath(dirname(__FILE__)) . '/GestoreAccessi.php');
-
+require_once(realpath(dirname(__FILE__)) . '/Utente.php');
 
 $_SESSION['message'] = '';
  // Start the session
@@ -8,11 +8,8 @@ $_SESSION['message'] = '';
 
 if(!isset($_SESSION['gestoreAccessi'])){
     $_SESSION['gestoreAccessi'] = new GestoreAccessi();
-    
-}else {
-
+}else{
     $_SESSION['gestoreAccessi']->login();
-
 }
 
 

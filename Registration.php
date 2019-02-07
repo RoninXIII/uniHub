@@ -37,7 +37,7 @@ session_start();
 		    <input  type="submit" value="Registrati" name="register" id="register" class="btn btn-lg btn-block btn-primary" />
         </div>
   	    <p>
-  	    	Sei già registrato? <a href="LoginPage.php">Effetua il log in</a>
+  	    	Sei già registrato? <a href="Login.php">Effetua il log in</a>
   	    </p>
     </form>
 

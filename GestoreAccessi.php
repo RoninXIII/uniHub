@@ -1,13 +1,9 @@
 <?php
-
 session_start();
-/*require_once(realpath(dirname(__FILE__)) . '/Utente.php');
-require_once(realpath(dirname(__FILE__)) . '/GestoreUtente.php');
-
-use Utente;
-use GestoreUtente;
-*/
-
+require_once(realpath(dirname(__FILE__)) . '/Utente.php');
+//require_once(realpath(dirname(__FILE__)) . '/GestoreUtente.php');
+//use Utente;
+//use GestoreUtente;
 
 /**
  * @access public
@@ -36,7 +32,7 @@ class GestoreAccessi {
 		  //legge l'username in entrata dal form
 		
 		  $username = $_POST['usernameLogin'];
-		 
+		  
 		  //legge la pswd in entrata dal form
 		  $password = $_POST['passwordLogin'];
 		  
@@ -47,8 +43,7 @@ class GestoreAccessi {
 		  mysqli_next_result($connection);
 		
 		  if ($row = mysqli_fetch_assoc($result)) {
-		
-			$livelloAutorizzativo = $row['LivelloAutorizzativo'];
+			//$livelloAutorizzativo = $row['LivelloAutorizzativo'];
 			  $_SESSION['username'] = $username;
 			  header ("Location: index.php");
 		  } else {
@@ -56,7 +51,7 @@ class GestoreAccessi {
 		   
 		  }
 		  mysqli_free_result($result);
-		
+		 // mysqli_close($connection);
 		  
 		}
 		}
