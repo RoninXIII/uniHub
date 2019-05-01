@@ -1,8 +1,7 @@
 <?php
-
+require_once(realpath(dirname(__FILE__)) . '/Utente.php');
 require_once('server.php');
 
-$query = mysqli_query($connection,"CALL ")
 
 ?>
 
@@ -15,40 +14,30 @@ $query = mysqli_query($connection,"CALL ")
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
- 
+ <link rel="stylesheet" href="aule.css">
 </head>
 <body>
     
-<div class="container-fluid" id="contenitore">
-    <div class="search">
-      <span class="fa fa-search"></span>
-      <input type="text" id="myInput" placeholder="Cerca l'utente desiderato...">
-    </div>
-    <table id="listaUtenti" class="table table-striped" style="background-color: #f5f5f6cc;">
-      <tr style = "background-color:#314057; color:white"> 
-        <td>Username</td>
-        <td>Email</td>
-        <td>Livello autorizzativo attuale</td>
-        <td>Modifica</td>
-        <td>Elimina utente</td>
+<?php require_once('header.php'); ?>
 
-      </tr>
-
- <ul><li></li></ul>
-    </table> 
-</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr >
+      <th scope="col">#</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Polo</th>
+      <th scope="col">Locazione</th>
+      <th scope="col">Prenotazione</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+  </tbody>
+</table>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script type="text/javascript">
-
-$(document).ready(function () {
-
-
-});
-
-
-</script>
+<script type="text/javascript" src="aule.js"></script>
 </body>
 </html>

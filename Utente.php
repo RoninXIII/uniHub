@@ -107,17 +107,18 @@ class Utente {
 	}
 
 	public function setLivello($aLivello){
-		$this ->$livelloAutorizzativo = $aLivello; 
+		$this ->livelloAutorizzativo = $aLivello; 
 	}
 
 	public function getLivello(){
-		return $this ->$livelloAutorizzativo; 
+		return $this ->livelloAutorizzativo; 
 	}
 
-    public function __construct($paramUsername,$paramEmail,$paramPreferences){
+    public function __construct($paramUsername,$paramEmail,$paramPreferences,$paramLivello){
 		$this->username = $paramUsername;
 		$this->email = $paramEmail;
 		$this->preferenze = $paramPreferences;
+		$this ->livelloAutorizzativo = $paramLivello;
 	}
 }
 ?>

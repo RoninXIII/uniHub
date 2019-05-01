@@ -83,7 +83,11 @@ body {
 }
 
 
+.titles{
 
+    color: rgba(184, 22, 22, 0.664);
+    font-weight: 700;
+}
 ul {
     list-style-type: none;
     padding: 0px;
