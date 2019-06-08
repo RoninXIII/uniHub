@@ -2,6 +2,8 @@
 require_once(realpath(dirname(__FILE__)) . '/Utente.php');
 require_once("server.php");
 //print_r($_SESSION['utente']);
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,8 +14,18 @@ require_once("server.php");
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <style>#report_modal_button:hover{
+    cursor: pointer;
+    color:blue;
+    text-decoration: underline;
+  }
+  h2{
+    background-color: #161fc566;
+    border-radius: 2.3em;
+  }
+  </style>
 </head>
-<body>
+<body class="text-center">
 <?php require_once('header.php'); ?>
 
 
@@ -35,7 +47,7 @@ require_once("server.php");
 
       <label for="repeat-new-password">Ripeti la nuova password</label></br>
       <input type="password" name="repeat-new-password" id="repeat-new-password" class="form-control" autofocus="on" /></br>
-      <button type="button"  id="buttonChangePassword" class="btn btn-success" />Cambia password</button></br>
+      <button type="button"  id="buttonChangePassword" class="btn btn-outline-success" >Cambia password</button></br>
     </div>
   
   </div>
@@ -45,7 +57,7 @@ require_once("server.php");
     <div id="deleteAccount_div">
       <h2>Elimina l'account</h2>
       <div id="delete_message"><h4 style ="color:red;">ATTENZIONE! L'effetto sarà immediato</h4></div>
-      <button type="button"  id="delete-account-submit"  class="btn btn-danger" >Elimina account </button>
+      <button type="button"  id="delete-account-submit"  class="btn btn-outline-danger" >Elimina account </button>
     </div>
   </div>
   <hr />
@@ -54,10 +66,74 @@ require_once("server.php");
       <div id ="modificaPreferenze_message"></div>
       <label for="emailChange"><h2>Modifica preferenze</h2></br><h6>(inserire le preferenze separate da una virgola)</h6></label></br>
       <input type="text"   name="preferenze[]" class="form-control" autofocus="on" autocomplete="on" value="<?php  echo $_SESSION['utente'] ->getPreferences(); ?>"/></br>
-      <button  type="button" class="btn btn-success"  id="buttonChangePreferenze"  >Modifica</button>
+      <button  type="button" class="btn btn-outline-success"  id="buttonChangePreferenze"  >Modifica</button>
 
     </div>
   </div>
+
+  <hr/>
+  <div class="form-group">
+    <div id="refresh_div">
+      <h2>Sistema automatico di refreshing</h2>
+      <div id="refresh_message"><h4>Scegli se impostare o meno l'aggiornamento automatico delle notizie</h4></div>
+      <button type="button"   class="btn btn-outline-primary" data-toggle="modal" data-target="#refresh_modal" >Modifica</button>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+<div id="refresh_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Refreshing</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+       
+      </div>
+      <div class="modal-body">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="refresh_button" ></button>
+     
+      </div>
+    </div>
+
+  </div>
+</div>
+<hr/>
+  <div class="form-group">
+    <div id="report_div">
+   
+      <div id="report_message"><h4>Hai rilevato un bug? <h5 id="report_modal_button" data-toggle="modal" data-target="#report_modal" >Segnalacelo!</h5></h4></div>
+  
+      
+    </div>
+  </div>
+  <!-- Modal -->
+<div id="report_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Segnalazione bug</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+       
+      </div>
+      <div class="modal-body">
+      <input type="text" id="titolo" class="form-control" placeholder="Titolo" required><br>
+       <textarea class="form-control" name="bug" id="bug" cols="48" rows="10" placeholder="Descrivi il problema (max 1500 char)" required></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" id="report_button" >Invia</button>
+     
+      </div>
+    </div>
+
+  </div>
+</div>
 
 </form>
 
@@ -70,9 +146,79 @@ $(document).ready(function(){
 
 var username = "<?php echo $_SESSION['utente']->getUsername(); ?>";
 
-var email = "<?php echo $_SESSION['utente']->getEmail() ?>";
+var email = "<?php echo $_SESSION['utente']->getEmail(); ?>";
+
+var refresh =[<?php echo $_SESSION['utente']-> getRefresh()[0]['Refresh']; ?>,"<?php echo $_SESSION['utente']-> getRefresh()[0]['Intervallo'];  ?>"];
 
 
+if(refresh[0] == 0){
+  $("#refresh_button").addClass("btn btn-outline-success");
+  $("#refresh_button").html("Attiva");
+
+ 
+}else{
+  $("#refresh_modal .modal-body").html("Intervallo impostato: 10s");
+  $("#refresh_button").addClass("btn btn-outline-danger");
+  $("#refresh_button").html("Disattiva");
+}
+
+$("#refresh_modal").on('click','#refresh_button', function(e){
+
+if(refresh[0] == 0){
+
+refresh[0] =1;
+
+}else {
+
+  refresh[0] = 0;
+
+}
+var Intervallo = refresh[1];
+  
+
+  $.ajax({
+    type: "post",
+    url: "update.php",
+    data: {Username:username,Refresh:refresh[0], Intervallo:Intervallo},
+    success: function (data) {
+var dataParsed = JSON.parse(data);
+
+      if(dataParsed == "OK!" && refresh[0] == 1){
+   
+  $("#refresh_modal .modal-body").html("Intervallo impostato: 10s");
+  $("#refresh_button").removeClass("btn btn-outline-success").addClass("btn btn-outline-danger");
+  $("#refresh_button").html("Disattiva");
+      }else if(dataParsed == "OK!" && refresh[0] == 0){
+
+        
+   $("#refresh_modal .modal-body").html("");
+   $("#refresh_button").removeClass("btn btn-outline-danger").addClass("btn btn-outline-success");
+  $("#refresh_button").html("Attiva");
+      }else alert(dataParsed);
+    }
+  });
+ 
+ 
+
+});
+
+$("#report_modal ").on('click','#report_button', function(e){
+
+var titolo = $("#report_modal #titolo").val();
+var testo = $("#report_modal #bug").val();
+$.ajax({
+  type: "POST",
+  url: "insert.php",
+  data: {Titolo:titolo,Bug:testo,Utente:username},
+  success: function (data) {
+    var dataParsed = JSON.parse(data);
+
+    alert(dataParsed);
+
+  }
+});
+
+});
 
 
 $("#pswdChange_div").on('click','#buttonChangePassword', function(e){

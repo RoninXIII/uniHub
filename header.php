@@ -24,6 +24,9 @@
           <a class="nav-link" href="aule.php"><span class="fas fa-university"></span>&ensp;Aule</a>
         </li>
        <?php }?>
+       <li class="nav-item active">
+          <a class="nav-link" href="dashboard.php"><span class="fas fa-university"></span>&ensp;Dashboard</a>
+        </li>
       </ul>
   
     </div>

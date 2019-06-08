@@ -8,19 +8,20 @@ $(document).ready(function(){
     $.ajax({
       type: "post",
       url: "data.php",
-      data: {Notizie: "0"},
+      data: {Notizie: "0",Preferenze:preferenze},
       dataType: "json",
       success: function (data) {
       
           $.each(data, function (index) { 
 
-            $(wrapper).append('<tr class="unread"  data-toggle="modal" data-target="#modal'+data[index].Cod+'">'+
+            $(wrapper).append('<tr class="unread" accesskey="'+data[index].Cod+'"  data-toggle="modal" data-target="#modal'+data[index].Cod+'">'+
             '<td class="inbox-small-cells"><i class="fa fa-star"></i></td>'+
             '<td class="view-message  mittente" >'+data[index].Mittente+'</td>'+
             '<td class="view-message oggetto">'+data[index].Oggetto+'</td>'+
             '<td class="view-message tags">'+data[index].Tags+'</td>'+
-            '<td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td>'+
+            '<td class="view-message  inbox-small-cells">&emsp;<i class="fa fa-paperclip"></i></td>'+
             '<td class="view-message  data_pubblicazione">'+data[index].Data_pubblicazione+'</td>'+
+            '<td class="view-message ">&emsp;<button type="button"  class="btn btn-outline-primary eliminaNotizia"><span class="far fa-trash-alt"></span></button></td>'+
             '</tr>' );
 
         $(wrapper).append('<div class="modal fade"  id="modal'+data[index].Cod+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+data[index].Cod+'" aria-hidden="true">'+
@@ -47,6 +48,32 @@ $("#searchbar").on("keyup", function() {
 
 
   
+$(document).on("click",".eliminaNotizia", function(){
+    var row = $(this).closest("tr");
+    
+    var id = row.attr("accesskey");
+    var modal = $(document).find('#modal'+id);
+    
+   
+    $.ajax({
+        type: "post",
+        url: "delete.php",
+        data: {CodElimina:id},
+        success: function (data) {
+            var dataParsed = JSON.parse(data);
+
+            if(dataParsed == "Eliminazione effettuata!"){
+                row.remove();
+                modal.remove();
+            }
+            alert(dataParsed);
+        }
+    });
+    return;
+
+});
+
+  
     $(document).on("click","#buttonPosta", function(){ 
     
         var titolo = $('#titolo').val();
@@ -55,12 +82,18 @@ $("#searchbar").on("keyup", function() {
         var dataAttuale = new Date();
         dataAttuale = dataAttuale.toLocaleString();
         var categoria = $('#category').val();
-        
+        var aula = null;
+        var dataAppello = null;
+        if(categoria == "Appello"){
+            aula = $('#aula').val();
+            dataAppello = $('#dataAppello').val();
+            var footer = 'L\'esame si svolgerà nell\'aula '+aula+' (situata in [Locazione aula] il '+dataAppello+')';
+        }
 
         $.ajax({
             url: "./insert.php",
             type: "post",
-            data: {Titolo:titolo,Contenuto:contenuto,Utente:utente,Tags:tags,Categoria:categoria},
+            data: {Titolo:titolo,Contenuto:contenuto,Utente:utente,Tags:tags,Categoria:categoria,Aula:aula,Data:dataAppello},
             success: function (data) {
                 var dataParsed = JSON.parse(data);
 
@@ -77,7 +110,7 @@ $("#searchbar").on("keyup", function() {
                                       '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header">'+
                                       '<h5 class="modal-title" id="titoloModal'+lastCod+'">'+titolo+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
                                       '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+contenuto+'</div>'+
-                                      '<div class="modal-footer"></div></div></div></div>' );                     
+                                      '<div class="modal-footer">'+footer+'</div></div></div></div>' );                     
                                      
                     $('#exampleModalCenter').modal('hide');
                 lastCod++;
@@ -95,10 +128,10 @@ $("#searchbar").on("keyup", function() {
     $.ajax({
         type: "post",
         url: "data.php",
-        data: {Aule: "0"},
+        data: {Aule: "0",Utente:utente},
         dataType: "json",
         success: function (data) {
-         aule = data;
+       
          for (var index = 0; index < data.length; index++) {
               selectAule = selectAule+"<option>"+data[index].nome+"</option>";
              
@@ -121,8 +154,30 @@ if(this.value == "Appello"){
         '</div></div></div><div class="row"><div class="col-md-6"><div class="form-group"><label for="category">Categoria</label>'+
         '<select class="form-control" id="category"><option>Appello</option><option>Notizia</option></select>'+
         '<br/><label for="aula">Aula</label><select class="form-control" id="aula">'+selectAule+'</select></div></div>'+
-        '<div class="col-md-6"><div class="form-group"><label for="tags">Tags</label><input type="text" class="form-control" id="tags" placeholder="Tags"></div></div></div></div></div></div>'+
+        '<div class="col-md-6"><div class="form-group"><label for="tags">Tags</label><input type="text" class="form-control" id="tags" placeholder="Tags"><br>'+
+        '<label for="dataAppello">Data appello</label><div class="input-group date" id="datetimepicker2" data-target-input="nearest">'+
+        '<input type="text" id="dataAppello" class="form-control datetimepicker-input" data-target="#datetimepicker2"/><div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">'+
+        '<div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></div>'+
+        '</div></div></div></div></div></div>'+
         '<div class="modal-footer"><button type="button" id="buttonPosta" class="btn btn-primary">Posta <span class="fas fa-thumbs-up" aria-hidden="true"></span></button></div>');
+
+        
+
+        $('#datetimepicker2').datetimepicker({
+            icons: {
+                time: 'fas fa-clock',
+                date: 'fas fa-calendar',
+                up: 'fas fa-arrow-up',
+                down: 'fas fa-arrow-down',
+                previous: 'fas fa-chevron-left',
+                next: 'fas fa-chevron-right',
+                today: 'fas fa-calendar-check-o',
+                clear: 'fas fa-trash',
+                close: 'fas fa-times'
+            },
+            locale:"it",
+            format: "D-M-YYYY H:mm:ss "
+        });
 }
 else {
     $("#modalPostaNotizia").html(contenutoModal);
@@ -130,6 +185,7 @@ else {
 }
   });
 
+ 
 
 
  

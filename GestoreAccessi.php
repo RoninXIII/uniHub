@@ -33,25 +33,24 @@ class GestoreAccessi {
 		
 		  $username = $_POST['usernameLogin'];
 		  
-		  //legge la pswd in entrata dal form
-		  $password = $_POST['passwordLogin'];
 		  
-		  $password = md5($password);
 		
-		if($result =  mysqli_query($connection,"CALL su_select_utenti('$username','','$password')")){
+		if($result =  mysqli_query($connection,"CALL su_select_utenti('$username','','')")){
 		
-		  mysqli_next_result($connection);
+		
 		
 		  if ($row = mysqli_fetch_assoc($result)) {
+			if(password_verify($_POST['passwordLogin'],$row['Password'])){
 			//$livelloAutorizzativo = $row['LivelloAutorizzativo'];
 			  $_SESSION['username'] = $username;
 			  header ("Location: index.php");
+			}else  $_SESSION['message'] = 'Username o Password errati';
 		  } else {
 			  $_SESSION['message'] = 'Username o Password errati';
 		   
 		  }
-		  mysqli_free_result($result);
-		 // mysqli_close($connection);
+		
+		  mysqli_close($connection);
 		  
 		}
 		}

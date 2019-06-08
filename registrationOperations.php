@@ -8,7 +8,8 @@ require_once('server.php');
         $username = $_POST['username'];
      
         $email= $_POST['email'];
-
+        $livello = $_POST['Livello'];
+//Si controlla che l'email o lo username non siano già presenti nel database.
         $sql = mysqli_query($connection,"CALL su_select_utenti('$username','$email','')");
 
         mysqli_next_result($connection);
@@ -17,30 +18,30 @@ require_once('server.php');
            echo json_encode("L'email o lo username è già presente nel database!");
         }else{
       
-
-        $password = md5($_POST['password']); //md5 has password for security
-        $hash = md5( rand(0,1000) );
-        
-        if($query = mysqli_query($connection,"CALL su_insert_user('$username','$email','$password','$hash')")){
-            mysqli_next_result($connection);
-                //set session variables
+      
+        $password = password_hash($_POST['password'],PASSWORD_DEFAULT); 
+        $hash = password_hash(rand(0,1000), PASSWORD_DEFAULT);
+        //Si inserisce l'utente all'interno del database
+        if($query = mysqli_query($connection,"CALL su_insert_user('$username','$email','$password','$livello','$hash')")){
+      
+                //Si settano le variabili di sessione
                 $_SESSION['username'] = $username;
                
-                //insert user data into database
+                //Si settano le variabili per l'invio dell'email
                        
-                $to = $email; // Send email to our user
-                $subject = 'Verifica la tua mail'; // Give the email a subject 
+                $to = $email; //Destnatario
+                $subject = 'Verifica la tua mail'; // Oggetto
                 $message = '
-                Abbiamo ricevuto la sua richiesta di iscrizione alla piattaforma di visualizzazione del Piano Strategico.
+                Abbiamo ricevuto la sua richiesta di iscrizione alla piattaforma UniHub.
                 Le sue credenziali sono le seguenti.
                 Username: '.$username.'
-                Password: '.$_POST['password'].'
+                Password: '.$_POST['password'].' 
 
                 Per verificare la mail, la preghiamo di cliccare al seguente link
                 https://localhost/uniHub/verify.php?email='.$email.'&hash='.$hash.'        
-                '; // Our message above including the link
+                '; 
                                              
-                $headers = 'From:noreply@https://localhost/uniHub/index.php' . "\r\n"; // Set from headers
+                $headers = 'From:noreply@https://localhost/uniHub/index.php' . "\r\n"; 
 
                 if(mail($to, $subject, $message, $headers)){
                     

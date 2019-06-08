@@ -31,7 +31,7 @@ class Utente {
 	/**
 	 * @AttributeType string
 	 */
-	private $impostazioniHub;
+	private $refresh;
 	/**
 	 * @AssociationType GestoreAccessi
 	 * @AssociationMultiplicity 1
@@ -114,11 +114,20 @@ class Utente {
 		return $this ->livelloAutorizzativo; 
 	}
 
-    public function __construct($paramUsername,$paramEmail,$paramPreferences,$paramLivello){
+	public function getRefresh(){
+		return $this ->refresh; 
+	}
+
+	public function setRefresh($aRefresh){
+		$this ->refresh[0]['Refresh'] = $aRefresh; 
+	}
+
+    public function __construct($paramUsername,$paramEmail,$paramPreferences,$paramLivello,$paramRefresh){
 		$this->username = $paramUsername;
 		$this->email = $paramEmail;
 		$this->preferenze = $paramPreferences;
 		$this ->livelloAutorizzativo = $paramLivello;
+		$this ->refresh = $paramRefresh; 
 	}
 }
 ?>

@@ -69,7 +69,7 @@ body {
 }
 .table-inbox tr td:hover {
     cursor: pointer;
-    background-color: #1d3974;
+
 }
 .table-inbox tr td .fa-star.inbox-started, .table-inbox tr td .fa-star:hover {
     color: #f78a09;
@@ -135,6 +135,22 @@ ul {
     align-items: center;
     border-radius: 50%;
     color:white;
+    }
+
+    .fa-trash-alt{
+        color: red;
+    }
+
+    button.btn-outline-primary:hover {
+        color: #fff;
+        background-color: #ff3f0026;
+        border-color: #f00;
+        border-radius: 20px;
+    }
+
+    button.btn-outline-primary{
+        border-radius: 20px;
+        border-color: #ff3f0026;
     }
 
  

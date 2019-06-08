@@ -1,8 +1,3 @@
-<?php
-session_start(); 
-
-
-?>
 
 <!DOCTYPE html>
 <html>
@@ -12,34 +7,67 @@ session_start();
      <title>Register page</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+     <link rel="stylesheet" href="Login.css">
     </head>
-<body class="text-center">
-    <!--<div class="header">
-  	    <h2></h2>
-    </div>-->
-    
-	
-	<form  method="post" enctype="multipart/form-data" autocomplete="on" class="form-signin">
-        <img src="LogoUnicam.png" alt="" class="mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">Registrati</h1>  
-        <div  id="registerUser_div"> </div>
-        <div class="input-group">
-            <label for="username" class="sr-only">Username</label>
-            <input class="form-control" type="text" placeholder="Username" name="username" id="username" required />
-            <label for="email" class="sr-only">Email</label>
-            <input class="form-control" type="email" placeholder="Email" name="email" id="email" required />
-        </div>
-        <div class="input-group">
-            <label for="password" class="sr-only">Password</label>
-            <input class="form-control" type="password" placeholder="Password" required name="password" id="password" autocomplete="new-password" required />
-            <label for="password" class="sr-only">Riconferma Password</label>
-            <input class="form-control" type="password" placeholder="Confirm Password" required name="confirmpassword" id="confirmpassword" autocomplete="new-password" required />
-		    <input  type="submit" value="Registrati" name="register" id="register" class="btn btn-lg btn-block btn-primary" />
-        </div>
-  	    <p>
+<body >
+  
+
+<div class="container">
+            <form class="form-horizontal" role="form">
+                <h3 align="center">Registrati!</h3>
+                <img src="LogoUnicam.png" alt="" class="mb-4" >
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label">Email* </label>
+                    <div class="col-sm-9">
+                        <input type="email" id="email" placeholder="Email" class="form-control" name= "email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-3 control-label">Password*</label>
+                    <div class="col-sm-9">
+                        <input type="password" id="password" placeholder="Password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmpassword" class="col-sm-3 control-label">Conferma Password*</label>
+                    <div class="col-sm-9">
+                        <input type="password" id="confirmpassword" placeholder="Password" class="form-control">
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    <label class="control-label col-sm-3">*Sono:</label>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="livello" id="studente" value="0">Studente
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="livello" id="personale" value="1">Personale d'ufficio
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="livello" id="professore" value="2">Professore
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- /.form-group -->
+            
+                <button type="submit" class="btn btn-primary btn-block" id="register">Registrati</button><br>
+                <p>
   	    	Sei già registrato? <a href="Login.php">Effetua il log in</a>
   	    </p>
-    </form>
+            </form> <!-- /form -->
+            
+        </div> <!-- ./container -->
+    
+	
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
@@ -53,37 +81,29 @@ $("#register").on("click", function(e){
 e.preventDefault();
 
 
-var username        = document.getElementById('username').value;
 var email           = document.getElementById('email').value;
+var username = email.substr(0,email.indexOf('@'));
 var password        = document.getElementById('password').value;
 var confirmpassword = document.getElementById('confirmpassword').value;
+var livello = $(':checked').val();
 
 if(username =='' || email=='' || password=='' || confirmpassword==''){
     //$('#registerUser_div').append('<h4><em>Tutti i campi sono obbligatori!!!</em></h4>');
-    $('#registerUser_div').html('').html('<div class="alert alert-danger" role="alert"><em>Tutti i campi sono obbligatori!!!</em></div>');
+   alert("Tutti i campi sono obbligatori!");
     return;
 }
 if(password != confirmpassword){
-    $('#registerUser_div').html('').html('<div class="alert alert-danger" role="alert"><em>Le due password non combaciano!!!</em></div>');
+    alert("Le due password non combaciano!");
     return;
 }
 $.ajax({
     url: "./registrationOperations.php",
     type: "post",
-    data: {username: username, email: email, password: password, confirmpassword: confirmpassword },
+    data: {username: username, email: email, password: password, confirmpassword: confirmpassword,Livello:livello },
 
     success: function(data){
        var dataParsed = JSON.parse(data);
-        if(dataParsed == "Utente registrato correttamente!"){
-            $('#registerUser_div').html('').html('<div class="alert alert-success" role="alert"><em>Registrazione avvenuta con successo, controlla la tua email per verificarti.</em></div>');
-        }else if(dataParsed == "L'email è già presente nel database!"){
-            $('#registerUser_div').html('').html('<div class="alert alert-danger" role="alert"><em>Sei già registrato!</em></div>');
-        }else if(dataParsed == "Username già presente!"){
-            $('#registerUser_div').html('').html('<div class="alert alert-danger" role="alert"><em>Username già presente!</em></div>');
-        }
-        else{
-            $('#registerUser_div').html('').html('<div class="alert alert-danger" role="alert"><em>C\'è stato un problema con la tua registrazione, verifica che le informazioni inserite siano corrette.</em></div>');
-        }
+       alert(dataParsed);
     }
 });
 

@@ -11,9 +11,14 @@ if(!isset($_SESSION["username"])){
 }else if(!isset($_SESSION["utente"])){
     $param = $_SESSION['username'];
     if($query=mysqli_query($connection,"call su_select_utenti('$param','','')")){
-        mysqli_next_result($connection);
+ 
     $result = mysqli_fetch_assoc($query);
-    $_SESSION['utente'] = new Utente($result['Username'],$result['Email'],$result['Preferenze'],$result['LivelloAutorizzativo']);
+           //Refresh è un array che indica se il sistema automatico di refreshing è attivo o meno e qual è il valore dell'intervallo
+        //di quest'ultimo
+        $refresh = array();   
+        $refresh[]  = array('Refresh' =>$result['Refresh'] , 'Intervallo' => $result['Intervallo'] );
+    $_SESSION['utente'] = new Utente($result['Username'],$result['Email'],$result['Preferenze'],$result['LivelloAutorizzativo'],$refresh);
+   
     }else{
         die("Errore: ".mysqli_error($connection));
     }
@@ -31,7 +36,7 @@ if(!isset($_SESSION["username"])){
     <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
- 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />  
 </head>
 <body >
     <div >
@@ -66,6 +71,7 @@ if(!isset($_SESSION["username"])){
                             <td>Tags</td>
                             <td>Allegati</td>
                             <td>Data pubblicazione</td>
+<?php if($_SESSION['utente'] ->getLivello() == 3 ){?> <td>&ensp;Elimina</td> <?php }?>
                         </tr>
                     </tbody>
                           </table>
@@ -133,6 +139,8 @@ if(!isset($_SESSION["username"])){
                           
                         </div>
                     </div>
+                    <div class="container">
+    
       </div> <!-- Fine modal per postare la notizia -->
       <div class="modal-footer">
         <button type="button" id="buttonPosta"  class="btn btn-primary">Posta&ensp;<span class="fas fa-thumbs-up" aria-hidden="true"></span></button>
@@ -147,14 +155,23 @@ if(!isset($_SESSION["username"])){
     
 </div>
 <?php } ?>
+
+
    
-               
+     
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/it.js"></script>
 <script>
       var utente = "<?php echo $_SESSION['utente']->getUsername(); ?>";
       var livello = "<?php echo $_SESSION['utente']->getLivello(); ?>";
+      var preferenze = "<?php echo $_SESSION['utente']->getPreferences(); ?> ";
+      
+ 
 </script>
 <script type="text/javascript" src="index.js"></script>
+ 
 </body>
 </html>
