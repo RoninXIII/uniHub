@@ -17,4 +17,4 @@ Per visualizzare correttamente le pagine dell'applicazione web  "UniHub" è nece
   - Se l'installazione è andata a buon fine si visualizzerà la pagina del login all'applicazione.
   
   
-   * Per importare la cartella del progetto fare click su "download" nel riquadro a destra della denominazione del progetto.
+   *Per importare la cartella del progetto fare click su "download" nel riquadro a destra della denominazione del progetto.
