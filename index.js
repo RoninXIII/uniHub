@@ -92,9 +92,15 @@ $(document).on("click",".eliminaNotizia", function(e){
   
     $(document).on("click","#buttonPosta", function(){ 
     
+        var decisione = prompt("Confermi i dati inseriti?");
+        if(decisione == false){
+            return;
+        }
         var titolo = $('#titolo').val();
         var contenuto = $('#contenuto').val();
         var tags = $('#tags').val().trim().split(",");
+
+        
         var dataAttuale = new Date();
         dataAttuale = dataAttuale.toLocaleString();
         var categoria = $('#category').val();
