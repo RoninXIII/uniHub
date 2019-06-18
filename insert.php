@@ -9,7 +9,8 @@ if(isset($_POST['Titolo']) && isset($_POST['Contenuto']) && isset($_POST['Utente
     $utente = $_POST['Utente'];
     $tags = array();
     $tags = $_POST['Tags'];
-    
+    $codNotizia = $_POST['CodNotizia'];
+    $codTag = $_POST['CodTag'];
     $aula = $_POST['Aula'];
     
     $dataAppello = $_POST['Data'];
@@ -17,12 +18,15 @@ if(isset($_POST['Titolo']) && isset($_POST['Contenuto']) && isset($_POST['Utente
     if($_POST['Categoria'] == "Appello") {$categoria = 1;}else {$categoria = 0;}
     $stringTags = implode(",",$tags);
     
-    if($query = mysqli_query($connection, "CALL su_insert_notizia('$titolo','$contenuto','$categoria','$aula','$dataAppello','$stringTags','$utente')")){
+    if($query = mysqli_query($connection, "CALL su_insert_notizia('$codNotizia','$titolo','$contenuto','$categoria','$aula','$dataAppello','$stringTags','$utente')")){
      
         foreach ($tags as $value) {
 
-            mysqli_query($connection,"insert into tags(Nome) value('$value')");
+            mysqli_query($connection,"insert into tags(Id,Nome) value('$codTag','$value')");
+            mysqli_query($connection,"insert into tagmap(Id_notizia,Id_tag) values('$codNotizia','$codTag')");
+            $codTag++;
         }
+        
         
         echo json_encode("Notizia postata correttamente!");
         

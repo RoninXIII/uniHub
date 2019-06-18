@@ -2,10 +2,36 @@ $(document).ready(function(){
     
     //Il wrapper indica l'area dove andranno poi ad essere "agganciati" o eliminati gli elementi html
     var wrapper = $(".table-inbox");
-    //Il lastCod è l'ultimo codice identificativo delle notizie che troviamo all'interno del database,
+    //Il lastCodNotizia è l'ultimo codice identificativo delle notizie che troviamo all'interno del database,
     //ciò servirà ad avere una progressione nell'inserimento delle notizie oltre che ad evitare duplicati.
-    var lastCod = 0;
+    var lastCodNotizia = 0;
+    var lastCodTag = 0;
+    $.ajax({
+        type: "post",
+        url: "data.php",
+        data: {Last:"0"},
+        dataType: "json",
+        success: function (data) {
+            
+            if(data[0][0] == null) {lastCodNotizia = 1} else {lastCodNotizia = (Number(data[0][0]) +1);}
 
+            
+            if(data[1][0] == null) {lastCodTag = 1} else {lastCodTag = (Number(data[1][0]) + 1);};
+            alert("ok")
+        }
+    });
+
+
+    function checkSyntax(element) {
+        
+        
+           
+        if(element.includes("#") && (/\s/.test(element) == false)){
+            return true;
+        }else return false;    
+        
+        
+    }
 
 function getNotizie() {
     
@@ -34,7 +60,7 @@ function getNotizie() {
                         '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+data[index].Contenuto+'</div>'+
                         '<div class="modal-footer"></div></div></div></div>' ); 
             });
-         lastCod = parseInt(data[data.length -1].Cod) +1;
+        
         
         }
         
@@ -47,8 +73,9 @@ getNotizie();
 
 if (refresh[0] == 1) {
     setInterval(() => {
+        $(wrapper).html('');
         getNotizie();
-    }, refresh[1]);
+    }, 3000);
 } 
  
 
@@ -92,7 +119,7 @@ $(document).on("click",".eliminaNotizia", function(e){
   
     $(document).on("click","#buttonPosta", function(){ 
     
-        var decisione = prompt("Confermi i dati inseriti?");
+        var decisione = confirm("Confermi i dati inseriti?");
         if(decisione == false){
             return;
         }
@@ -100,6 +127,14 @@ $(document).on("click",".eliminaNotizia", function(e){
         var contenuto = $('#contenuto').val();
         var tags = $('#tags').val().trim().split(",");
 
+        tags.forEach(element => {
+           var val= checkSyntax(element);
+           if(val == false){
+            alert("La sintassi non è corretta, inserire # prima di ogni tag!!!");
+            return;
+           }
+        });
+        
         
         var dataAttuale = new Date();
         dataAttuale = dataAttuale.toLocaleString();
@@ -118,27 +153,28 @@ $(document).on("click",".eliminaNotizia", function(e){
         $.ajax({
             url: "./insert.php",
             type: "post",
-            data: {Titolo:titolo,Contenuto:contenuto,Utente:utente,Tags:tags,Categoria:categoria,Aula:aula,Data:dataAppello},
+            data: {CodNotizia:lastCodNotizia,CodTag:lastCodTag,Titolo:titolo,Contenuto:contenuto,Utente:utente,Tags:tags,Categoria:categoria,Aula:aula,Data:dataAppello},
             success: function (data) {
                 var dataParsed = JSON.parse(data);
 
                 if(dataParsed == "Notizia postata correttamente!"){
                     alert(dataParsed);
-                    $(wrapper).append('<tr class="unread" data-toggle="modal" data-target="#modal'+lastCod+'"><td class="inbox-small-cells"><i class="fa fa-star"></i></td>'+
+                    $(wrapper).append('<tr class="unread" data-toggle="modal" data-target="#modal'+lastCodNotizia+'"><td class="inbox-small-cells"><i class="fa fa-star"></i></td>'+
                                       '<td class="view-message  mittente">'+utente+'</td>'+
                                       '<td class="view-message oggetto">'+titolo+'</td>'+
                                       '<td class="view-message tags">'+tags+'</td>'+
                                       '<td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td>'+
                                       '<td class="view-message data_attuale">'+dataAttuale+'</td></tr>');
                     
-                    $(wrapper).append('<div class="modal fade"  id="modal'+lastCod+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+lastCod+'" aria-hidden="true">'+
+                    $(wrapper).append('<div class="modal fade"  id="modal'+lastCodNotizia+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+lastCodNotizia+'" aria-hidden="true">'+
                                       '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header">'+
-                                      '<h5 class="modal-title" id="titoloModal'+lastCod+'">'+titolo+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+                                      '<h5 class="modal-title" id="titoloModal'+lastCodNotizia+'">'+titolo+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
                                       '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+contenuto+'</div>'+
                                       '<div class="modal-footer">'+footer+'</div></div></div></div>' );                     
                                      
                     $('#exampleModalCenter').modal('hide');
-                lastCod++;
+                lastCodNotizia++;
+                lastCodTag = lastCodTag + tags.length;
                 }else alert(dataParsed);
             }
 

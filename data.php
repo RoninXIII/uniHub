@@ -147,6 +147,16 @@ if($queryNotizie = mysqli_query($connection, "CALL su_select_notizie('$preferenz
         echo json_encode($tags);
     }else echo json_encode("Errore: ".mysqli_error($connection));
 
+}elseif (isset($_POST['Last'])) {
+    $queryLastNotizia = mysqli_query($connection,"select max(Cod) as maxCod from notizia");
+    $queryResult = mysqli_fetch_row($queryLastNotizia);
+    $queryLastTag = mysqli_query($connection,"select max(Id) as maxCod from tags");
+    $queryResult2 = mysqli_fetch_row($queryLastTag);
+
+    $last = array( $queryResult,$queryResult2 );
+
+    echo json_encode($last);
+    
 } else echo json_encode(error_reporting(E_ALL));
 
 
