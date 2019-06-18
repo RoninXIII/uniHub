@@ -6,7 +6,7 @@ Per visualizzare correttamente le pagine dell'applicazione web  "UniHub" è nece
  - Scaricare e installare XAMPP, software che permette di  connettersi in localhost simulando un server apache. 
    Link download di XAMPP : https://www.apachefriends.org/it/index.html
   
-  -Importare i file di progetto premendo su "clone or download" nel riquadro in alto a destra e successivamente "download zip".                 
+  - Importare i file di progetto premendo su "clone or download" nel riquadro in alto a destra e successivamente "download zip".                 
    Dopo aver scaricato il file zip estrarlo in C:/xampp/htdocs.
   
   - Aprire XAMPP.
