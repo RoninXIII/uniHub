@@ -10,7 +10,7 @@ if($queryNotizie = mysqli_query($connection, "CALL su_select_notizie('$preferenz
 
 //Si conservano in un array tutte le notizie selezionate dalla query.
     while($row = mysqli_fetch_assoc($queryNotizie)){
-        $notizie[] = array("Cod" => $row['Cod'], "Oggetto" => $row['Nome'], "Contenuto" => $row['Descrizione'], "Tags" => $row['Tags'],
+        $notizie[] = array("Cod" => $row['Cod'], "Oggetto" => $row['Nome'], "Contenuto" => $row['Descrizione'],"Tags" => $row['Tags'],
         "Data_pubblicazione" => date('d-m-Y H:i:s',strtotime($row['DataPubblicazione'])),"Appello" => $row['Appello'],"Aula" => $row['Aula'],"Ora" => $row['DataAppello'],
         "Mittente" => $row['Utente']);
     }
@@ -26,28 +26,77 @@ if($queryNotizie = mysqli_query($connection, "CALL su_select_notizie('$preferenz
     if(isset($_POST['Utente'])){
     $utente = $_POST['Utente'];
 
-    if($queryAulePrenotate = mysqli_query($connection,"CALL su_select_aule('$utente')")){
+    if($queryAulePrenotate = mysqli_query($connection,"CALL su_select_aule('$utente','','','')")){
       
         $aulePrenotate = array();
         while($row = mysqli_fetch_assoc($queryAulePrenotate)){
-            $aulePrenotate[] = array("cod" =>$row['Cod'], "nome" =>$row['Nome'], "polo" =>$row['Polo'], "locazione" =>$row['Locazione']);
+            $aulePrenotate[] = array("aula" =>$row['Aula'], "polo" =>$row['Polo'], "locazione" =>$row['Locazione'], "dataPrenotazione" => $row['DataAppello']);
         }
         
         echo json_encode($aulePrenotate);
+
             }else echo json_encode("Errore: ".mysqli_error($connection));
 
     }else{
-        //Altrimenti la richiesta http viene effettuata dalla pagina Aule.php e si selezionano tutte le aule presenti nel database.
 
-        if($queryAule = mysqli_query($connection,"CALL su_select_aule('')")){
+        if($_POST['Aule'] == "1"){
+
+            if($queryAule =mysqli_query($connection,"SELECT * FROM aule order by Polo")){
+                $aule= array();
+        
+                while($row = mysqli_fetch_assoc($queryAule)){
+                    $aule[] = array("cod" => $row['Cod'],"nome" => $row['Nome'], "polo" => $row['Polo'], "locazione" => $row['Locazione']);
+                }
+
+                echo json_encode($aule);
+
+            }else echo json_encode("Errore: ".mysqli_error($connection));
+        } else {
+  
+        $dataAppello = strtotime($_POST['DataAppello']);
+        $dataInizio = date('Y-m-d H:i:s',$dataAppello);
+        $dataFine = date_create(date('Y-m-d H:i:s',$dataAppello));
+        $durata = $_POST['Durata'];
+
+        switch ($durata) {
+            case '1':
+           date_modify($dataFine,"+1 hours");
+           $dataFine = date_format($dataFine,'Y-m-d H:i:s');
+                break;
+            case '2':
+            date_modify($dataFine,"+2 hours");
+            $dataFine = date_format($dataFine,'Y-m-d H:i:s');
+                break;
+            case '3':
+            date_modify($dataFine,"+3 hours");
+            $dataFine = date_format($dataFine,'Y-m-d H:i:s');
+                break;
+            case '4':
+            date_modify($dataFine,"+4 hours");
+            $dataFine = date_format($dataFine,'Y-m-d H:i:s');
+                break;            
+            
+            default:
+            date_modify($dataFine,"+2 hours");
+            $dataFine = date_format($dataFine,'Y-m-d H:i:s');
+                break;
+        }
+
+        $polo = $_POST['Polo'];
+
+        if($queryAule = mysqli_query($connection,"CALL su_select_aule('','$polo','$dataInizio','$dataFine')")){
             $aule = array();
             while($row = mysqli_fetch_assoc($queryAule)){
                 $aule[] = array("cod" =>$row['Cod'], "nome" =>$row['Nome'], "polo" =>$row['Polo'], "locazione" =>$row['Locazione']);
             }
 
+
+
             echo json_encode($aule);
+        
 
         }else echo json_encode("Errore: ".mysqli_error($connection));
+    }
     }
 
 }elseif(isset($_POST['Utenti']) && isset($_POST['Bugs']) ) {
@@ -88,6 +137,16 @@ if($queryNotizie = mysqli_query($connection, "CALL su_select_notizie('$preferenz
     
     echo json_encode($poli);
     
+}elseif (isset($_POST['Account'])) {
+    $tags = array();
+    if($queryTags = mysqli_query($connection,"SELECT Nome from tags")){
+
+        while ($row = mysqli_fetch_assoc($queryTags)) {
+            $tags[] = array("nome" =>$row['Nome']);
+        }
+        echo json_encode($tags);
+    }else echo json_encode("Errore: ".mysqli_error($connection));
+
 } else echo json_encode(error_reporting(E_ALL));
 
 

@@ -28,9 +28,16 @@ $(document).ready(function () {
 
               $.each(data[1], function (index) { 
               
-                            $(wrapper2).append('<tr><th scope="row">'+count2+'</th><td class="Titolo">'+data[1][index].titolo+'</td>'+
+                            $(wrapper2).append('<tr accesskey="'+data[1][index].cod+'"  data-toggle="modal" data-target="#modal'+data[1][index].cod+'"><th scope="row">'+count2+'</th><td class="Titolo">'+data[1][index].titolo+'</td>'+
                             '<td class="data">'+data[1][index].data+'</td><td class="username">'+data[1][index].utente+'</td>'+
                             '<td class="eliminaBug"><button id="'+data[1][index].cod+'" type="button" class="btn btn-outline-danger">Elimina</button></td></tr>');
+
+                            $(wrapper2).append('<div class="modal fade"  id="modal'+data[1][index].cod+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+data[1][index].cod+'" aria-hidden="true">'+
+                            '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header">'+
+                            '<h5 class="modal-title" id="titoloModal'+data[1][index].cod+'">'+data[1][index].titolo+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+data[1][index].descrizione+'</div>'+
+                            '<div class="modal-footer"></div></div></div></div>' ); 
+              
                             count2++;
                           });
            
@@ -63,6 +70,35 @@ $(document).ready(function () {
             });
         });
     
+        $(wrapper2).on("click",".eliminaBug .btn",function(e){
+          
+          e.stopPropagation();
+
+     
+          var confirmation = confirm("Sei sicuro di voler procedere all'eliminazione del report selezionato?");
+            
+          if(confirmation == false || confirmation == null) return;
+
+          var object = $(this);
+          var cod = $(this).attr('id');
+
+          $.ajax({
+            type: "post",
+            url: "delete.php",
+            data: {Elimina_report : cod},
+            success: function (data) {
+                var dataParsed = JSON.parse(data);
+                
+
+                if(dataParsed == "Eliminazione effettuata!"){
+                    $(object).closest("tr").remove();
+                    
+                    alert(dataParsed);
+                }
+            }
+        });
+
+        });
 
           
         $(wrapper).on("click",".livello .btn", function () {

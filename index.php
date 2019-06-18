@@ -24,6 +24,9 @@ if(!isset($_SESSION["username"])){
     }
 }
 
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +74,7 @@ if(!isset($_SESSION["username"])){
                             <td>Tags</td>
                             <td>Allegati</td>
                             <td>Data pubblicazione</td>
-<?php if($_SESSION['utente'] ->getLivello() == 3 ){?> <td>&ensp;Elimina</td> <?php }?>
+                            <?php if($_SESSION['utente'] ->getLivello() == 3 ){?> <td>&ensp;Elimina</td> <?php }?>
                         </tr>
                     </tbody>
                           </table>
@@ -167,8 +170,8 @@ if(!isset($_SESSION["username"])){
 <script>
       var utente = "<?php echo $_SESSION['utente']->getUsername(); ?>";
       var livello = "<?php echo $_SESSION['utente']->getLivello(); ?>";
-      var preferenze = "<?php echo $_SESSION['utente']->getPreferences(); ?> ";
-      
+      var preferenze = "<?php echo $_SESSION['utente']->getPreferences(); ?>";
+      var refresh =[<?php echo $_SESSION['utente']-> getRefresh()[0]['Refresh']; ?>,"<?php echo $_SESSION['utente']-> getRefresh()[0]['Intervallo'];  ?>"]; 
  
 </script>
 <script type="text/javascript" src="index.js"></script>

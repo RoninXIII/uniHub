@@ -5,38 +5,53 @@ $(document).ready(function(){
     //Il lastCod è l'ultimo codice identificativo delle notizie che troviamo all'interno del database,
     //ciò servirà ad avere una progressione nell'inserimento delle notizie oltre che ad evitare duplicati.
     var lastCod = 0;
+
+
+function getNotizie() {
+    
     $.ajax({
-      type: "post",
-      url: "data.php",
-      data: {Notizie: "0",Preferenze:preferenze},
-      dataType: "json",
-      success: function (data) {
-      
-          $.each(data, function (index) { 
+        type: "post",
+        url: "data.php",
+        data: {Notizie: "0",Preferenze:preferenze},
+        dataType: "json",
+        success: function (data) {
+        
+            $.each(data, function (index) { 
+  
+              $(wrapper).append('<tr class="unread" accesskey="'+data[index].Cod+'"  data-toggle="modal" data-target="#modal'+data[index].Cod+'">'+
+              '<td class="inbox-small-cells"><i class="fa fa-star"></i></td>'+
+              '<td class="view-message  mittente" >'+data[index].Mittente+'</td>'+
+              '<td class="view-message oggetto">'+data[index].Oggetto+'</td>'+
+              '<td class="view-message tags">'+data[index].Tags+'</td>'+
+              '<td class="view-message  inbox-small-cells">&emsp;<i class="fa fa-paperclip"></i></td>'+
+              '<td class="view-message  data_pubblicazione">'+data[index].Data_pubblicazione+'</td>'+
+              '<td class="view-message ">&emsp;<button type="button"  class="btn btn-outline-primary eliminaNotizia"><span class="far fa-trash-alt"></span></button></td>'+
+              '</tr>' );
+  
+          $(wrapper).append('<div class="modal fade"  id="modal'+data[index].Cod+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+data[index].Cod+'" aria-hidden="true">'+
+                        '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header">'+
+                        '<h5 class="modal-title" id="titoloModal'+data[index].Cod+'">'+data[index].Oggetto+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+data[index].Contenuto+'</div>'+
+                        '<div class="modal-footer"></div></div></div></div>' ); 
+            });
+         lastCod = parseInt(data[data.length -1].Cod) +1;
+        
+        }
+        
+      });
+   
+}
 
-            $(wrapper).append('<tr class="unread" accesskey="'+data[index].Cod+'"  data-toggle="modal" data-target="#modal'+data[index].Cod+'">'+
-            '<td class="inbox-small-cells"><i class="fa fa-star"></i></td>'+
-            '<td class="view-message  mittente" >'+data[index].Mittente+'</td>'+
-            '<td class="view-message oggetto">'+data[index].Oggetto+'</td>'+
-            '<td class="view-message tags">'+data[index].Tags+'</td>'+
-            '<td class="view-message  inbox-small-cells">&emsp;<i class="fa fa-paperclip"></i></td>'+
-            '<td class="view-message  data_pubblicazione">'+data[index].Data_pubblicazione+'</td>'+
-            '<td class="view-message ">&emsp;<button type="button"  class="btn btn-outline-primary eliminaNotizia"><span class="far fa-trash-alt"></span></button></td>'+
-            '</tr>' );
+getNotizie();
 
-        $(wrapper).append('<div class="modal fade"  id="modal'+data[index].Cod+'" tabindex="-1" role="dialog" aria-labelledby="titoloModal'+data[index].Cod+'" aria-hidden="true">'+
-                      '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header">'+
-                      '<h5 class="modal-title" id="titoloModal'+data[index].Cod+'">'+data[index].Oggetto+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
-                      '<span aria-hidden="true">&times;</span></button></div><div class="modal-body">'+data[index].Contenuto+'</div>'+
-                      '<div class="modal-footer"></div></div></div></div>' ); 
-          });
-       lastCod = parseInt(data[data.length -1].Cod) +1;
-      
-      }
-      
-    });
 
+if (refresh[0] == 1) {
+    setInterval(() => {
+        getNotizie();
+    }, refresh[1]);
+} 
  
+
 
 $("#searchbar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
@@ -48,7 +63,8 @@ $("#searchbar").on("keyup", function() {
 
 
   
-$(document).on("click",".eliminaNotizia", function(){
+$(document).on("click",".eliminaNotizia", function(e){
+    e.stopPropagation();
     var row = $(this).closest("tr");
     
     var id = row.attr("accesskey");
@@ -82,12 +98,15 @@ $(document).on("click",".eliminaNotizia", function(){
         var dataAttuale = new Date();
         dataAttuale = dataAttuale.toLocaleString();
         var categoria = $('#category').val();
-        var aula = null;
+        var aula = "";
         var dataAppello = null;
         if(categoria == "Appello"){
-            aula = $('#aula').val();
+            var arr = $('#aula').val().trim().split("-");
+            aula = arr[0];
+            var polo = arr[1];
             dataAppello = $('#dataAppello').val();
-            var footer = 'L\'esame si svolgerà nell\'aula '+aula+' (situata in [Locazione aula] il '+dataAppello+')';
+            var footer = 'L\'esame si svolgerà nell\'aula '+aula+' (Polo: '+polo+' il '+dataAppello+')';
+        
         }
 
         $.ajax({
@@ -133,7 +152,7 @@ $(document).on("click",".eliminaNotizia", function(){
         success: function (data) {
        
          for (var index = 0; index < data.length; index++) {
-              selectAule = selectAule+"<option>"+data[index].nome+"</option>";
+              selectAule = selectAule+"<option>"+data[index].aula+" - "+data[index].polo+"</option>";
              
          }
       

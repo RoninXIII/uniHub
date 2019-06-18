@@ -19,7 +19,7 @@ require_once('server.php');
     
 <?php require_once('header.php'); ?>
 
-<table class="table" id ="table1">
+<table class="table dashboard" id ="table1">
   <thead class="thead-dark">
     <tr><h2 align="center">Lista utenti</h2></tr>
     <tr >
@@ -36,7 +36,7 @@ require_once('server.php');
   </tbody>
 </table>
 
-<table class="table" id="table2">
+<table class="table dashboard" id="table2">
   <thead class="thead-dark">
   <tr><h2 align="center">Reports</h2></tr>
     <tr >
@@ -56,6 +56,6 @@ require_once('server.php');
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script type="text/javascript" src="dashboard.js"></script>
+<script type="text/javascript" src="dashboard.js"> var username = "<?php echo $_SESSION['utente']->getUsername(); ?>";</script>
 </body>
 </html>

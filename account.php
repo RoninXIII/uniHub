@@ -1,7 +1,7 @@
 <?php 
 require_once(realpath(dirname(__FILE__)) . '/Utente.php');
 require_once("server.php");
-//print_r($_SESSION['utente']);
+
 
 
 ?>
@@ -20,8 +20,28 @@ require_once("server.php");
     text-decoration: underline;
   }
   h2{
-    background-color: #161fc566;
+    
     border-radius: 2.3em;
+  }
+  div{
+    word-wrap: break-word ;
+  }
+  .fas.fa-arrow-circle-down{
+    background-color: whitesmoke;
+    border-radius: 30px;
+    color: #1c6a95;
+    cursor: pointer;
+    
+  }
+  .fas.fa-arrow-circle-down:hover{
+    background-color: #11d411;
+  }
+  .tagDiv{
+    border-block-color: black;
+
+  border-style: solid;
+
+  border-width: 1px;
   }
   </style>
 </head>
@@ -30,112 +50,174 @@ require_once("server.php");
 
 
 
-<!--Comparirà il nome dell'utente loggato.-->
-<h2 align="center">Account di <?php echo $_SESSION['utente']->getUsername(); ?> </h2>
+<div class="container">
+	<div class="row bg-dark mb-4 my-4 text-white">
+		<h2 >Modifica le tue impostazioni</h2>
+	</div>
+	
+	<div class="row">
+	    <!-- side nav-->
+	    <aside class="col-sm-6 col-md-3 card  my-4">
+	        <h3>UniHub</h3>
+	        <hr/>
+	        <ul>
+	            <li>
+	                
+    	            <span class="fas fa-cogs"></span>
+    	              Impostazioni generali
+                <ul>
+                 <li>
+                   
+                   <a href="#refresh_div">
+                     <span class="fas fa-sync-alt"></span> Refreshing
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+	            <li> 
+	                
+    	          <span class="fas fa-user-shield"></span>
+                  Account settings
+                <ul>
+                <li>
+                  <a href="#pswdChange_div">
+                    <span class="fas fa-key"></span> Password 
+                  </a>
+                </li>
+                <li>
+                  <a href="#deleteAccount_div">
+                    <span class="fas fa-user-minus"></span> Elimina &ensp;
+                  </a>
+                </li>
+                 <li>
+                  <a href="#modificaPreferenze_div">
+                    <span class="fas fa-user-tag"></span> Tags &emsp;&ensp;
+                  </a>
+                </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#report_div"><span class="fas fa-bug"></span> Report bug</a>
+              </li>
+	        </ul>
+	    </aside>
+	    
+	    <section class="col-sm-6 col-md-8 offset-md-1" id="main-content">
+	
 
-</br></br>
+      <form>
 
-<form>
+<div class="form-group" style="margin-top: -30;">
+  <div id="pswdChange_div">
+    <div id ="password_message"></div>
+    <h2>Modifica  password</h2>
 
-  <div class="form-group" style="margin-top: -30;">
-    <div id="pswdChange_div">
-      <div id ="password_message"></div>
-      <h2>Modifica  password</h2>
+    <label for="new-password">Inserisci la nuova password</label></br>
+    <input type="password" name="new-password" id="new-password" class="form-control" autofocus="on"  /></br>
 
-      <label for="new-password">Inserisci la nuova password</label></br>
-      <input type="password" name="new-password" id="new-password" class="form-control" autofocus="on"  /></br>
-
-      <label for="repeat-new-password">Ripeti la nuova password</label></br>
-      <input type="password" name="repeat-new-password" id="repeat-new-password" class="form-control" autofocus="on" /></br>
-      <button type="button"  id="buttonChangePassword" class="btn btn-outline-success" >Cambia password</button></br>
-    </div>
-  
+    <label for="repeat-new-password">Ripeti la nuova password</label></br>
+    <input type="password" name="repeat-new-password" id="repeat-new-password" class="form-control" autofocus="on" /></br>
+    <button type="button"  id="buttonChangePassword" class="btn btn-outline-success" >Cambia password</button></br>
   </div>
-  <hr />
 
-  <div class="form-group">
-    <div id="deleteAccount_div">
-      <h2>Elimina l'account</h2>
-      <div id="delete_message"><h4 style ="color:red;">ATTENZIONE! L'effetto sarà immediato</h4></div>
-      <button type="button"  id="delete-account-submit"  class="btn btn-outline-danger" >Elimina account </button>
-    </div>
-  </div>
-  <hr />
-  <div class="form-group">
-    <div id="modificaPreferenze_div">
-      <div id ="modificaPreferenze_message"></div>
-      <label for="emailChange"><h2>Modifica preferenze</h2></br><h6>(inserire le preferenze separate da una virgola)</h6></label></br>
-      <input type="text"   name="preferenze[]" class="form-control" autofocus="on" autocomplete="on" value="<?php  echo $_SESSION['utente'] ->getPreferences(); ?>"/></br>
-      <button  type="button" class="btn btn-outline-success"  id="buttonChangePreferenze"  >Modifica</button>
+</div>
+<hr />
 
-    </div>
-  </div>
-
-  <hr/>
-  <div class="form-group">
-    <div id="refresh_div">
-      <h2>Sistema automatico di refreshing</h2>
-      <div id="refresh_message"><h4>Scegli se impostare o meno l'aggiornamento automatico delle notizie</h4></div>
-      <button type="button"   class="btn btn-outline-primary" data-toggle="modal" data-target="#refresh_modal" >Modifica</button>
-      
-    </div>
-  </div>
-  <!-- Modal -->
-<div id="refresh_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-      <h4 class="modal-title">Refreshing</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-       
-      </div>
-      <div class="modal-body">
-       
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="refresh_button" ></button>
-     
-      </div>
-    </div>
-
+<div class="form-group">
+  <div id="deleteAccount_div">
+    <h2>Elimina l'account</h2>
+    <div id="delete_message"><h4 style ="color:red;">ATTENZIONE! L'effetto sarà immediato</h4></div>
+    <button type="button"  id="delete-account-submit"  class="btn btn-outline-danger" >Elimina account </button>
   </div>
 </div>
-<hr/>
-  <div class="form-group">
-    <div id="report_div">
+<hr />
+<div class="form-group">
+  <div id="modificaPreferenze_div">
+    <div id ="modificaPreferenze_message"></div>
+    <label for="emailChange"><h2>Modifica preferenze</h2></br></label></br>
+   <div> <select class="form-control" name="selectPreferenze" id="selectPreferenze"></select><br><span class="fas fa-arrow-circle-down fa-3x" id="addTag"></span><br><br>
+   <div class="tagDiv" ><strong id="preferenzeUtente"><?php  echo $_SESSION['utente'] ->getPreferences(); ?></strong></div><br>
    
-      <div id="report_message"><h4>Hai rilevato un bug? <h5 id="report_modal_button" data-toggle="modal" data-target="#report_modal" >Segnalacelo!</h5></h4></div>
-  
-      
-    </div>
+    <button  type="button" class="btn btn-outline-success"  id="buttonChangePreferenze"  >Salva!</button>&emsp;
+    <button type="button" class="btn btn-outline-danger" id ="deletePreferenze">Pulisci!</button>
   </div>
-  <!-- Modal -->
-<div id="report_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+</div>
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-      <h4 class="modal-title">Segnalazione bug</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-       
-      </div>
-      <div class="modal-body">
-      <input type="text" id="titolo" class="form-control" placeholder="Titolo" required><br>
-       <textarea class="form-control" name="bug" id="bug" cols="48" rows="10" placeholder="Descrivi il problema (max 1500 char)" required></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success" id="report_button" >Invia</button>
+<hr/>
+<div class="form-group">
+  <div id="refresh_div">
+    <h2>Sistema automatico di refreshing</h2>
+    <div id="refresh_message"><h4>Scegli se impostare o meno l'aggiornamento automatico delle notizie</h4></div>
+    <button type="button"   class="btn btn-outline-primary" data-toggle="modal" data-target="#refresh_modal" >Modifica</button>
+    
+  </div>
+</div>
+<!-- Modal -->
+<div id="refresh_modal" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+    <h4 class="modal-title">Refreshing</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
      
-      </div>
     </div>
-
+    <div class="modal-body">
+     <label for="intervallo">Ogni quanto vuoi caricare le notizie?</label>
+     <select class="form-control" name="intervallo" id="intervallo"><option value="3">3 secondi</option><option value="5">5 secondi</option><option value="10">10 secondi</option></select>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="refresh_button" ></button>
+   
+    </div>
   </div>
+
+</div>
+</div>
+<hr/>
+<div class="form-group">
+  <div id="report_div">
+ 
+    <div id="report_message"><h4>Hai rilevato un bug? <h5 id="report_modal_button" data-toggle="modal" data-target="#report_modal"><span class="fas fa-bug"></span> Segnalacelo!</h5></h4></div>
+
+    
+  </div>
+</div>
+<!-- Modal -->
+<div id="report_modal" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+    <h4 class="modal-title">Segnalazione bug</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+     
+    </div>
+    <div class="modal-body">
+    <input type="text" id="titolo" class="form-control" placeholder="Titolo" required><br>
+     <textarea class="form-control" name="bug" id="bug" cols="48" rows="10" placeholder="Descrivi il problema (max 1500 char)" required></textarea>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-success" id="report_button" >Invia</button>
+   
+    </div>
+  </div>
+
+</div>
 </div>
 
 </form>
+	    </section>
+	
+	</div>
+
+
+
+
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -151,13 +233,43 @@ var email = "<?php echo $_SESSION['utente']->getEmail(); ?>";
 var refresh =[<?php echo $_SESSION['utente']-> getRefresh()[0]['Refresh']; ?>,"<?php echo $_SESSION['utente']-> getRefresh()[0]['Intervallo'];  ?>"];
 
 
+
+$.ajax({
+  type: "post",
+  url: "data.php",
+  data: {Account:"0"},
+  dataType: "json",
+  success: function (data) {
+    
+    $.each(data, function (index) { 
+
+      $("#selectPreferenze").append('<option value="'+data[index].nome+'">'+data[index].nome+'</option>');
+
+    });
+  }
+});
+
+$(document).on("click","#addTag", function (e) { 
+ 
+  var tag = $(document).find('select#selectPreferenze :selected').attr('value');
+  var contenuto = $(".tagDiv>strong").html();
+  if(contenuto == ""){
+    $(".tagDiv>strong").append(tag+'');
+  }else{
+    $(".tagDiv>strong").append(','+tag+'');
+  }
+
+  
+  
+});
+
 if(refresh[0] == 0){
   $("#refresh_button").addClass("btn btn-outline-success");
   $("#refresh_button").html("Attiva");
 
  
 }else{
-  $("#refresh_modal .modal-body").html("Intervallo impostato: 10s");
+  $("#refresh_modal .modal-body").html('Intervallo impostato: '+refresh[0]['Intervallo']+' secondi');
   $("#refresh_button").addClass("btn btn-outline-danger");
   $("#refresh_button").html("Disattiva");
 }
@@ -173,8 +285,8 @@ refresh[0] =1;
   refresh[0] = 0;
 
 }
-var Intervallo = refresh[1];
-  
+
+var Intervallo = $(document).find('select#intervallo :selected').attr('value');
 
   $.ajax({
     type: "post",
@@ -185,13 +297,14 @@ var dataParsed = JSON.parse(data);
 
       if(dataParsed == "OK!" && refresh[0] == 1){
    
-  $("#refresh_modal .modal-body").html("Intervallo impostato: 10s");
+  $("#refresh_modal .modal-body").html('Intervallo impostato: '+Intervallo+' secondi');
   $("#refresh_button").removeClass("btn btn-outline-success").addClass("btn btn-outline-danger");
   $("#refresh_button").html("Disattiva");
       }else if(dataParsed == "OK!" && refresh[0] == 0){
 
         
-   $("#refresh_modal .modal-body").html("");
+   $("#refresh_modal .modal-body").html('<label for="intervallo">Ogni quanto vuoi caricare le notizie?</label>'+
+       '<select class="form-control" name="intervallo" id="intervallo"><option value="3">3 secondi</option><option value="5">5 secondi</option><option value="10">10 secondi</option></select>');
    $("#refresh_button").removeClass("btn btn-outline-danger").addClass("btn btn-outline-success");
   $("#refresh_button").html("Attiva");
       }else alert(dataParsed);
@@ -201,6 +314,9 @@ var dataParsed = JSON.parse(data);
  
 
 });
+
+
+
 
 $("#report_modal ").on('click','#report_button', function(e){
 
@@ -274,10 +390,9 @@ $("#modificaPreferenze_div").on('click','#buttonChangePreferenze', function(e){
 
 //Prendiamo la stringa inserita  dall'utente, la si divide in sottostringhe (prendendo un delimitatore come parametro)
 //e si crea un array composto dalle suddette sottostringhe.
-  var preferenze = document.getElementsByName('preferenze[]')[0].value.trim().split(',');
+
+  var preferenze = $('#preferenzeUtente').html().split(',');
   
-
-
 
 $.ajax({
   url: "./cambioCredenzialiUtente.php",
@@ -295,6 +410,29 @@ $.ajax({
   }
 
   
+});
+
+
+});
+
+
+
+$("#modificaPreferenze_div").on('click','#deletePreferenze', function(e){
+e.preventDefault();
+
+$.ajax({
+  type: "post",
+  url: "delete.php",
+  data: {DeletePreferenze:"0",Utente:username},
+  
+  success: function (data) {
+    var dataParsed = JSON.parse(data);
+
+    if(dataParsed == "Eliminazione effettuata!"){
+
+      $(".tagDiv>strong").html('');
+    }
+  }
 });
 
 

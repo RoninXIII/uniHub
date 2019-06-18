@@ -22,15 +22,16 @@ require_once('server.php');
 <?php require_once('header.php'); ?>
 
 
-<table class="table searchTable">
+<table class="table searchTable" >
   <tr class="searchRow">
     <td>
-         
-      <select class="form-control" id="category">
+         <label for="polo">Polo:</label>
+      <select class="form-control" id="polo">
        
       </select>
     </td>
     <td>   
+      <label for="dataAppello">Data prenotazione:</label>
       <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
         <input type="text" id="dataAppello" class="form-control datetimepicker-input" data-target="#datetimepicker2"/>
         <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
@@ -40,17 +41,37 @@ require_once('server.php');
         </div>
       </div>
     </td>
+    <td>
+      <label for="durata">Durata prenotazione:</label><br>
+       <select class="form-control" id="durata"><option value="1">1 ora</option><option value="2">2 ore</option><option value="3">3 ore</option><option value="4">4 ore</option></select> 
+      </td>
   </tr>
   
 </table>
 <hr>
-<div align="center">
+<div align="center" class="buttonSearch">
 <button type="button" id="search" class="btn btn-outline-success">Cerca!</button>
 </div>
 <br>
-<table class="table aule">
+
+<table class="table prenotazioni">
   
 </table>
+
+<table class="table aule">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Polo</th>
+      <th scope="col">Locazione</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -58,7 +79,9 @@ require_once('server.php');
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/it.js"></script>
-<script> var utente = "<?php echo $_SESSION['utente']->getUsername(); ?>"; </script>
+<script> var utente = "<?php echo $_SESSION['utente']->getUsername(); ?>";
+         var livello = "<?php echo $_SESSION['utente']->getLivello(); ?>"; 
+</script>
 <script type="text/javascript" src="aule.js"></script>
 
 </body>

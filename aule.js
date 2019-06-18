@@ -2,35 +2,93 @@
 $(document).ready(function () {
 
 
-
-   
-
 var count = 1;
 var classeAula = "";
+var wrapper = $('table.aule>tbody');
 
+
+if(livello == 1){
+    $("table.searchTable").css('display', 'none');
+    $("div.buttonSearch").css('display', 'none');
+    $("body").append('<hr><div class="aggiungiAula" align="center">'+
+    '<br><input id="nomeAula" class="form-control" type="text" placeholder="Aula"> - <input id="poloAula" class="form-control" type="text" placeholder="Polo"> - <input id="locazioneAula" type="text" class="form-control" placeholder="Locazione">'+
+    '<br><br><button type="button" id="buttonAggiungiAula" class="btn btn-outline-success">'+
+    '<span class="fas fa-arrow-up"></span>&ensp;Aggiungi!&ensp;<span class="fas fa-arrow-up"></span></button></div>');
+
+    getAule();
+}else{
+
+    $("table.aule").css('display', 'none');
+}
+function getAule() {
+    
+    $.ajax({
+        type: "post",
+        url: "data.php",
+        data: {Aule:"1"},
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) { 
+                 
+                $(wrapper).append('<tr><th scope="row">'+count+'</th><td class="nome">'+data[index].nome+'</td>'+
+                '<td class="Polo">'+data[index].polo+'</td><td class="locazione">'+data[index].locazione+'</td>'+
+                '</tr>');
+                count++;
+            });
+        }
+    });
+}
+
+
+$(document).on("click","#buttonAggiungiAula", function(){
+
+    var nome = $('#nomeAula').val();
+    var polo = $('#poloAula').val();
+    var locazione = $('#locazioneAula').val();
+
+    
+$.ajax({
+    type: "post",
+    url: "insert.php",
+    data: {Nome:nome,Polo:polo,Locazione:locazione},
+    success: function (data) {
+        var dataParsed = JSON.parse(data);
+
+        if(dataParsed == "L'aula è stata aggiunta al database!"){
+
+            $('table.aule>tbody').append('<tr><th scope="col">'+count+'</th><th scope="col">'+nome+'</th><th scope="col">'+polo+'</th><th scope="col">'+locazione+'</th></tr>');
+        }
+
+        alert(dataParsed);
+    }
+});
+
+
+});
 
  $(document).on("click","#search", function () {
      
-var polo = $('#category').val();
-var data = $('#dataAppello').val();
+var polo = $('#polo').val();
+ data = $('#dataAppello').val();
+ durata = $('select#durata :selected').attr('value');
 
-$('table.aule').html('<thead class="thead-dark"><tr><th scope="col">#</th><th scope="col">Nome</th>'+
+$('table.prenotazioni').html('<thead class="thead-dark"><tr><th scope="col">#</th><th scope="col">Nome</th>'+
                  '<th scope="col">Polo</th><th scope="col">Locazione</th><th scope="col">Prenotazione</th></tr></thead>'+
                  '<tbody></tbody>');
-                 var wrapper = $('table.aule>tbody');                 
+                 
 
       $.ajax({
       type: "post",
       url: "data.php",
-      data: {Aule:"0", Polo:polo, DataAppello:data},
+      data: {Aule:"0", Polo:polo, DataAppello:data, Durata:durata},
       dataType: "json",
       success: function (data) {
          
           $.each(data, function (index) { 
-            if(data[index].prenotata == 1){ classeAula = "disabled"}else {classeAula =""}
-            $(wrapper).append('<tr><th scope="row">'+count+'</th><td class="nome">'+data[index].nome+'</td>'+
+         
+            $('table.prenotazioni>tbody').append('<tr><th scope="row">'+count+'</th><td class="nome">'+data[index].nome+'</td>'+
             '<td class="Polo">'+data[index].polo+'</td><td class="locazione">'+data[index].locazione+'</td>'+
-            '<td class="prenotazione"><button id="'+data[index].cod+'" type="button" class="btn btn-outline-success"  '+classeAula+'>Prenota</button></td></tr>');
+            '<td class="prenotazione"><button id="'+data[index].cod+'" type="button" class="btn btn-outline-success">Prenota</button></td></tr>');
             count++;
           });
        
@@ -49,7 +107,7 @@ $('table.aule').html('<thead class="thead-dark"><tr><th scope="col">#</th><th sc
          
         $.each(data, function (index) { 
           
-            $("#category").append('<option>'+data[index].polo+'</option>');
+            $("#polo").append('<option>'+data[index].polo+'</option>');
     
           });
      }
@@ -58,14 +116,15 @@ $('table.aule').html('<thead class="thead-dark"><tr><th scope="col">#</th><th sc
  
 
    
-    $(wrapper).on("click",".btn", function () {
+    $(document).on("click","td.prenotazione .btn", function () {
         var object = $(this);
-        var aula = object.closest("td.nome").val();
-        var polo = object.closest("td.Polo").val();
+        var aula = $(this).attr('id');
+        var polo = $(this).closest('tr').children('td.Polo').html();
+
         $.ajax({
             type: "post",
             url: "insert.php",
-            data: {Polo:polo,Aula:aula,Utente:utente},
+            data: {Polo:polo,Aula:aula,Utente:utente,DataAppello:data,Durata:durata},
             success: function (data) {
                 var dataParsed = JSON.parse(data);
                 alert(dataParsed);
