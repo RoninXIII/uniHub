@@ -6,6 +6,7 @@ $(document).ready(function(){
     //ciò servirà ad avere una progressione nell'inserimento delle notizie oltre che ad evitare duplicati.
     var lastCodNotizia = 0;
     var lastCodTag = 0;
+
     $.ajax({
         type: "post",
         url: "data.php",
@@ -17,7 +18,7 @@ $(document).ready(function(){
 
             
             if(data[1][0] == null) {lastCodTag = 1} else {lastCodTag = (Number(data[1][0]) + 1);};
-            alert("ok")
+            
         }
     });
 
@@ -73,9 +74,9 @@ getNotizie();
 
 if (refresh[0] == 1) {
     setInterval(() => {
-        $(wrapper).html('');
+        $(wrapper).html('<tr class="titles"><td>#</td><td>Proprietario</td><td>Titolo</td><td>Tags</td><td>Allegati</td><td>Data pubblicazione</td></tr>');
         getNotizie();
-    }, 3000);
+    }, refresh[1]);
 } 
  
 

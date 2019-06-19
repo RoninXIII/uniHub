@@ -44,7 +44,7 @@ if(!isset($_SESSION["username"])){
 <body >
     <div >
 <?php require_once('header.php'); ?>
-    <div><h4><strong>Benvenuto nel tuo hub <?php echo $_SESSION['username'] ?></strong></h4></div>
+    <div><h4 align="center"><strong >Benvenuto nel tuo hub <?php echo $_SESSION['username'] ?></strong></h4></div>
 
   
     

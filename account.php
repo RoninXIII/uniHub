@@ -269,7 +269,7 @@ if(refresh[0] == 0){
 
  
 }else{
-  $("#refresh_modal .modal-body").html('Intervallo impostato: '+refresh[0]['Intervallo']+' secondi');
+  $("#refresh_modal .modal-body").html('Intervallo impostato: '+refresh[1]/1000+' secondi');
   $("#refresh_button").addClass("btn btn-outline-danger");
   $("#refresh_button").html("Disattiva");
 }

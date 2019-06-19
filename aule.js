@@ -3,23 +3,29 @@ $(document).ready(function () {
 
 
 var count = 1;
-var classeAula = "";
+
 var wrapper = $('table.aule>tbody');
 
-
-if(livello == 1){
-    $("table.searchTable").css('display', 'none');
-    $("div.buttonSearch").css('display', 'none');
-    $("body").append('<hr><div class="aggiungiAula" align="center">'+
-    '<br><input id="nomeAula" class="form-control" type="text" placeholder="Aula"> - <input id="poloAula" class="form-control" type="text" placeholder="Polo"> - <input id="locazioneAula" type="text" class="form-control" placeholder="Locazione">'+
-    '<br><br><button type="button" id="buttonAggiungiAula" class="btn btn-outline-success">'+
-    '<span class="fas fa-arrow-up"></span>&ensp;Aggiungi!&ensp;<span class="fas fa-arrow-up"></span></button></div>');
-
-    getAule();
-}else{
-
-    $("table.aule").css('display', 'none');
+switch (livello) {
+    case "2":
+        $("div.aggiungiAula").css('display', 'none');
+        getAule();
+        break;
+    case "1":
+            $("table.searchTable").css('display', 'none');
+            $("div.buttonSearch").css('display', 'none');
+            getAule();
+        break;
+    case "3":
+            $("div.aggiungiAula").css('display', 'none');
+            $("table.searchTable").css('display', 'none');
+            $("div.buttonSearch").css('display', 'none');
+            getAule();
+        break;    
+    default:
+        break;
 }
+
 function getAule() {
     
     $.ajax({

@@ -67,19 +67,6 @@ class GestoreAccessi {
 		}
 	}
 
-	/**
-	 * @access public
-	 * @param string aUsername
-	 * @param string aEmail
-	 * @param string aPassword
-	 * @return void
-	 * @ParamType aUsername string
-	 * @ParamType aEmail string
-	 * @ParamType aPassword string
-	 * @ReturnType void
-	 */
-	public function registrautente($aUsername, $aEmail, $aPassword) {
-		// Not yet implemented
-	}
+	
 }
 ?>

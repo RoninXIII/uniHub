@@ -8,7 +8,7 @@ if(isset($_POST['Refresh'])){
     $refresh = $_POST['Refresh'];
     if($refresh == 0) {$intervallo = null;}else{$intervallo = (int)$_POST['Intervallo'] * 1000;}
     if($query = mysqli_query($connection, "CALL su_update_user('$username','$refresh','$intervallo','')")){
-        $_SESSION['utente'] -> setRefresh($refresh);
+        $_SESSION['utente'] -> setRefresh($refresh,$intervallo);
         echo json_encode("OK!");
     }else echo json_encode("Errore:".mysqli_error($connection));
 

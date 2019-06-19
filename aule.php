@@ -71,7 +71,10 @@ require_once('server.php');
 
   </tbody>
 </table>
-
+<hr><div class="aggiungiAula" align="center">
+    <br><input id="nomeAula" class="form-control" type="text" placeholder="Aula"> - <input id="poloAula" class="form-control" type="text" placeholder="Polo"> - <input id="locazioneAula" type="text" class="form-control" placeholder="Locazione">
+    <br><br><button type="button" id="buttonAggiungiAula" class="btn btn-outline-success">
+    <span class="fas fa-arrow-up"></span>&ensp;Aggiungi!&ensp;<span class="fas fa-arrow-up"></span></button></div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

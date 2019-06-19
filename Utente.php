@@ -118,8 +118,9 @@ class Utente {
 		return $this ->refresh; 
 	}
 
-	public function setRefresh($aRefresh){
-		$this ->refresh[0]['Refresh'] = $aRefresh; 
+	public function setRefresh($aRefresh,$aIntervallo){
+		$this ->refresh[0]['Refresh'] = $aRefresh;
+		$this ->refresh[0]['Intervallo'] = $aIntervallo; 
 	}
 
     public function __construct($paramUsername,$paramEmail,$paramPreferences,$paramLivello,$paramRefresh){
